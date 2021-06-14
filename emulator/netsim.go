@@ -3,7 +3,7 @@ package main
 import (
 	"sync/atomic"
 	"sync"
-	"github.com/dispersed-ledger/dispersed-ledger/pika"
+	"github.com/yangl1996/dispersed-ledger/pika"
 )
 
 // FIFO implements a FIFO queue for network simulation. It supports Send and Recv. Send may be called concurrently,

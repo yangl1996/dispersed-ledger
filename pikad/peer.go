@@ -3,7 +3,7 @@ package main
 import (
 	"sync"
 
-	"github.com/dispersed-ledger/dispersed-ledger/pika"
+	"github.com/yangl1996/dispersed-ledger/pika"
 )
 
 func loopbackMsgs(m []pika.Message, ourid int, pmux *sync.Mutex, protocol pika.Protocol) ([]pika.Message, pika.Event) {

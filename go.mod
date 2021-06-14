@@ -1,4 +1,4 @@
-module github.com/dispersed-ledger/dispersed-ledger
+module github.com/yangl1996/dispersed-ledger
 
 go 1.15
 

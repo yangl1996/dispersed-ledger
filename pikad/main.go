@@ -18,7 +18,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/dispersed-ledger/dispersed-ledger/pika"
+	"github.com/yangl1996/dispersed-ledger/pika"
 )
 
 var NoRetrieve bool

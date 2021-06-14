@@ -16,7 +16,7 @@ import (
 	"strings"
 	"sync"
 	"text/template"
-	"github.com/dispersed-ledger/dispersed-ledger/pika"
+	"github.com/yangl1996/dispersed-ledger/pika"
 )
 
 var dpLogger = log.New(os.Stderr, "", 0)
