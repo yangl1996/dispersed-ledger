@@ -1,0 +1,9 @@
+testbed
+temp.sh
+*.gz
+*.html
+*.log
+*.json
+*.txt
+*.pdf
+!intra-vultr.txt

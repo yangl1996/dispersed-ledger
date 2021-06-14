@@ -1,0 +1,30 @@
+This directory holds data and Gnuplot scripts to produce the figures in the
+paper.
+
+.
+├── avid-reduction
+|	Theoretical comparison of AVID-M and AVID-FP.
+├── geo-latency-new
+|	Latency of DL and HB in the geo-distributed setting.
+├── geo-progress
+|	Sample trace of DL and HB demonstrating the decoupling idea of DL.
+├── geo-thruput
+|	Throughput comparison on the Vultr testbed, used in the appendix. *
+├── latency-metric
+|	Comparison of the two metrics for latency: all transactions, and local-
+|	originated transactions only. Used in the appendix.
+├── new-revision-geo-thruput
+|	Throughput comparison on the AWS testbed, also includes DL-Coupled.
+├── scalability-ratio
+|	Scalability plot showing the fraction of data for VID.
+├── scalability-thruput
+|	Scalability plot showing throughput vs. cluster size.
+├── synthetic-thruput-spatial
+|	Controlled experiment with geo-varying bandwidth.
+└── synthetic-thruput-variation
+	Controlled experiment with time-varying bandwidth.
+
+*: This dir also contains data on the AWS testbed, but the figure is not used
+   in the final paper. Instead, we use the fig in new-revision-geo-thruput,
+   which also includes DL-Coupled.
+

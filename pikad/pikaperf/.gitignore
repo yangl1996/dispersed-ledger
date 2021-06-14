@@ -1,0 +1,7 @@
+pikaperf
+*.csv
+*.dat
+*.pdf
+*.png
+*.svg
+temp.sh
