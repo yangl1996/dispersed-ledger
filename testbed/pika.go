@@ -4,16 +4,16 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/tmc/scp"
 	"golang.org/x/crypto/ssh"
 	"io"
 	"os"
+	"os/exec"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"sync"
-	"os/exec"
-	"path/filepath"
 	"time"
-	"github.com/tmc/scp"
 )
 
 type RemoteError struct {
@@ -96,8 +96,8 @@ func dispatchBwTest(args []string) {
 		mmlinkfiles = strings.Split(*mmlinkfile, ",")
 	}
 
-	duration :=	time.Duration(*durationSecs) * time.Second
-	BandwidthTest(servers, *outPath, command.Args(), *forceReinstall, duration, mmlinkfiles, *mmdelayms / 2, *nocopylatency)
+	duration := time.Duration(*durationSecs) * time.Second
+	BandwidthTest(servers, *outPath, command.Args(), *forceReinstall, duration, mmlinkfiles, *mmdelayms/2, *nocopylatency)
 }
 
 func copyFile(out, in string) error {
@@ -133,9 +133,9 @@ func BandwidthTest(servers []Server, outPath string, extraArgs []string, forceRe
 	}
 
 	// connect to each of the servers
-	connWg := &sync.WaitGroup{}	// wait for the ssh connection
-	installWg := &sync.WaitGroup{}	// wait for installation
-	experimentWg := &sync.WaitGroup{}	// wait for the experiment
+	connWg := &sync.WaitGroup{}       // wait for the ssh connection
+	installWg := &sync.WaitGroup{}    // wait for installation
+	experimentWg := &sync.WaitGroup{} // wait for the experiment
 	connWg.Add(len(servers))
 	installWg.Add(len(servers))
 	experimentWg.Add(len(servers))
@@ -399,7 +399,7 @@ func startPika(c *ssh.Client, id, n, f int, connlist, pikaFlags string, ourip st
 	if mmdelay == 0 && !mmlink {
 		cmd = pikacmd
 	} else {
-	// TODO: we are using infinite queue. Switch to pie or droptail
+		// TODO: we are using infinite queue. Switch to pie or droptail
 		cmd = fmt.Sprintf(`sudo su - test -c "sudo iptables -A PREROUTING -t nat -p udp -d %s --dport 9000 -j DNAT --to-destination 100.64.0.2 && mm-delay %d bash -c "\""sudo iptables -A PREROUTING -t nat -p udp -d 100.64.0.2 --dport 9000 -j DNAT --to-destination 100.64.0.4 && mm-link /tmp/linkfile /tmp/linkfile --uplink-queue=droptail --uplink-queue-args='packets=3000' --downlink-queue=droptail --downlink-queue-args='packets=3000' -- /pika/pikad -s 0.0.0.0:9000 -n %d -f %d -id %d -nodes %s %v &> /pika/pika.log"\"`, ourip, mmdelay, n, f, id, connlist, pikaFlags)
 	}
 	//fmt.Println(cmd)

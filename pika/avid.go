@@ -2,9 +2,9 @@ package pika
 
 import (
 	"bytes"
+	"encoding/binary"
 	"encoding/gob"
 	"fmt"
-	"encoding/binary"
 )
 
 // TODO: we should pass the pointer to the on-disk shard in the message, and let the
@@ -29,8 +29,8 @@ type ErasureCodeChunk interface {
 // or on the database.
 type StoredErasureCodeChunk struct {
 	InMemoryValue ErasureCodeChunk
-	DBKey []byte
-	IsStored bool
+	DBKey         []byte
+	IsStored      bool
 }
 
 // BUG(leiy): StoredErasureCodeChunk does not have a "delete" or "update" method.
@@ -40,8 +40,8 @@ func (s *StoredErasureCodeChunk) LoadPointer(db KVStore) *InMessageChunk {
 		// TODO
 		panic("can't load in-memory chunk into pointer")
 	}
-	return &InMessageChunk {
-		db: db,
+	return &InMessageChunk{
+		db:  db,
 		key: s.DBKey,
 	}
 }
@@ -83,23 +83,23 @@ func (s *StoredErasureCodeChunk) storeOnDisk(val ErasureCodeChunk, db KVStore) {
 	//bm, is := val.(encoding.BinaryMarshaler)
 	var b []byte
 	/*
-	// we can't use marshalbinary here because we don't have the concrete type
-	// to decode into when retrieving from the disk
-	if is {
-		b, err := bm.MarshalBinary()
-		if err != nil {
-			panic(err)
-		}
-		s.bmarshaller = true
-	} else {
-		*/
-		buf := &bytes.Buffer{}
-		enc := gob.NewEncoder(buf)
-		err := enc.Encode(&val)
-		if err != nil {
-			panic(err)
-		}
-		b = buf.Bytes()
+		// we can't use marshalbinary here because we don't have the concrete type
+		// to decode into when retrieving from the disk
+		if is {
+			b, err := bm.MarshalBinary()
+			if err != nil {
+				panic(err)
+			}
+			s.bmarshaller = true
+		} else {
+	*/
+	buf := &bytes.Buffer{}
+	enc := gob.NewEncoder(buf)
+	err := enc.Encode(&val)
+	if err != nil {
+		panic(err)
+	}
+	b = buf.Bytes()
 	//}
 	err = db.Put(s.DBKey, b)
 	if err != nil {
@@ -168,27 +168,27 @@ func (e *EmptyPayload) Size() int {
 
 // VIDOutput is the output of a VID instance.
 type VIDOutput struct {
-	payload           VIDPayload       // the object being dispersed in the VID, nil if it is not yet retrieved or decoded
-	associatedData    VIDPayload       // the object being broadcasted in the VID, nil if it is not yet retrieved or decoded
+	payload           VIDPayload             // the object being dispersed in the VID, nil if it is not yet retrieved or decoded
+	associatedData    VIDPayload             // the object being broadcasted in the VID, nil if it is not yet retrieved or decoded
 	ourChunk          StoredErasureCodeChunk // the erasure coded chunk of the dispersed file that should be held by us, nil if not received
 	ourEcho           StoredErasureCodeChunk // the erasure coded chunk of the broadcasted file that should be held by us, nil if not received
-	requestUnanswered []bool           // nil if we are answering chunk requests right away; otherwise, true if we have not answered the chunk
+	requestUnanswered []bool                 // nil if we are answering chunk requests right away; otherwise, true if we have not answered the chunk
 	// request previously sent by the corresponding node
 	canReleaseChunk bool // if we are allowed to release the payload chunk
-	canceled bool
+	canceled        bool
 }
 
 // VIDPayloadState is the execution state of the VID that is related to decoding the dispersed file.
 type VIDPayloadState struct {
 	chunks           []StoredErasureCodeChunk // the chunks that we have received, or nil if we have not received the chunk from that server
-	nChunks          int                // the number of chunks that we have received, which should equal the number of non-nil items in chunks
-	payloadScheduled bool               // if we want to request chunks
-	sentRequest      bool               // if we have requested payload chunks
+	nChunks          int                      // the number of chunks that we have received, which should equal the number of non-nil items in chunks
+	payloadScheduled bool                     // if we want to request chunks
+	sentRequest      bool                     // if we have requested payload chunks
 }
 
 // VIDCoreState is the core execution state of the VID.
 type VIDCoreState struct {
-	initID int                // ID of the node which should disperse the file
+	initID int                      // ID of the node which should disperse the file
 	echos  []StoredErasureCodeChunk // the chunks of the broadcasted file that we have received in Echo messages,
 	// or nil if we have not received Echo from that server
 	nEchos    int    // the number of echos that we have received, which should equal the number of non-nil items in echos
@@ -424,9 +424,9 @@ func (v *VID) UnmarshalBinary(data []byte) error {
 }
 
 type InMessageChunk struct {
-	db KVStore	// will be set in the outgoing path
-	key []byte	// will be set in the outgoing path
-	data []byte	// will be set in the incoming path
+	db      KVStore // will be set in the outgoing path
+	key     []byte  // will be set in the outgoing path
+	data    []byte  // will be set in the incoming path
 	decoded bool
 }
 
@@ -444,16 +444,16 @@ func (c *InMessageChunk) GobDecode(data []byte) error {
 
 // VIDMessage is the message emitted and handled by the VID.
 type VIDMessage struct {
-	Echo            bool             // true if this is an Echo message; an Echo message contains the broadcasted chunk
-	Ready           bool             // true if this is a Ready message
-	Disperse        bool             // true this is a Disperse message; a Disperse message contains the dispersed chunk
-	RequestChunk    bool             // true if this message requests a chunk of the dispersed file
-	RespondChunk    bool             // true if this message responds with a chunk request; such a message contains a dispersed chunk
-	Cancel bool
-	PayloadChunk    interface{}  // the chunk of the dispersed file
-	AssociatedChunk interface{}  // the chunk of the broadcasted file
-	DestID          int              // destination of the message
-	FromID          int              // source of the message
+	Echo            bool // true if this is an Echo message; an Echo message contains the broadcasted chunk
+	Ready           bool // true if this is a Ready message
+	Disperse        bool // true this is a Disperse message; a Disperse message contains the dispersed chunk
+	RequestChunk    bool // true if this message requests a chunk of the dispersed file
+	RespondChunk    bool // true if this message responds with a chunk request; such a message contains a dispersed chunk
+	Cancel          bool
+	PayloadChunk    interface{} // the chunk of the dispersed file
+	AssociatedChunk interface{} // the chunk of the broadcasted file
+	DestID          int         // destination of the message
+	FromID          int         // source of the message
 }
 
 // String formats the VIDMessage for debug output.

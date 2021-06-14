@@ -6,8 +6,8 @@ import (
 	"log"
 	"math"
 
+	"github.com/dispersed-ledger/dispersed-ledger/pika"
 	"github.com/klauspost/reedsolomon"
-	"github.com/yangl1996/gopika/pika"
 )
 
 type ReedSolomonCode struct {

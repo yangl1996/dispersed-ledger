@@ -11,7 +11,7 @@ import (
 	"runtime"
 	"runtime/pprof"
 	"sync"
-	"github.com/yangl1996/gopika/pika"
+	"github.com/dispersed-ledger/dispersed-ledger/pika"
 )
 
 var (

@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"github.com/vultr/govultr"
 	"os"
-	"strconv"
-	"sync"
-	"strings"
 	"sort"
+	"strconv"
+	"strings"
+	"sync"
 )
 
 var APIKey = os.Getenv("VULTR_KEY")
@@ -25,15 +25,15 @@ func DumpServerInfo(path string, servers []govultr.Server) {
 	var dt []Server
 	for _, s := range servers {
 		dt = append(dt, Server{
-			ID:       s.InstanceID,
-			PrivateIP:       s.MainIP,
-			PublicIP:       s.MainIP,
-			Location: s.Location,
-			Tag:      s.Tag,
-			Provider: "vultr",
-			User: "root",
-			KeyPath: keypath,
-			Port: 22,
+			ID:        s.InstanceID,
+			PrivateIP: s.MainIP,
+			PublicIP:  s.MainIP,
+			Location:  s.Location,
+			Tag:       s.Tag,
+			Provider:  "vultr",
+			User:      "root",
+			KeyPath:   keypath,
+			Port:      22,
 		})
 	}
 	sort.Sort(ServerByLocation(dt))
@@ -316,4 +316,3 @@ func RestartServers(tag string) {
 
 	fmt.Println("Servers rebooted")
 }
-

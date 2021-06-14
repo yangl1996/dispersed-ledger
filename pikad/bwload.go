@@ -8,7 +8,7 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/yangl1996/gopika/pika"
+	"github.com/dispersed-ledger/dispersed-ledger/pika"
 )
 
 const TxSize int = 250
@@ -37,17 +37,17 @@ func (b *Block) LogConfirm(i int) string {
 
 type BlockGenerator struct {
 	*sync.Mutex
-	queue   []time.Time
-	size    int
-	stopped bool
+	queue      []time.Time
+	size       int
+	stopped    bool
 	infBacklog bool
 }
 
 func NewBlockGenerator(size int, infBacklog bool) *BlockGenerator {
 	return &BlockGenerator{
-		Mutex: &sync.Mutex{},
-		queue: make([]time.Time, 0),
-		size:  size,
+		Mutex:      &sync.Mutex{},
+		queue:      make([]time.Time, 0),
+		size:       size,
 		infBacklog: infBacklog,
 	}
 }

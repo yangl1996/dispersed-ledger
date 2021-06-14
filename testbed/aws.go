@@ -1,8 +1,6 @@
 package main
 
 import (
-	"sort"
-	"os"
 	"encoding/json"
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
@@ -10,14 +8,16 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ec2"
-	"strings"
 	"net/http"
+	"os"
+	"sort"
+	"strings"
 	"sync"
 
-	"encoding/base64"
-	"regexp"
 	"bufio"
+	"encoding/base64"
 	"io/ioutil"
+	"regexp"
 )
 
 var AWSImageListLock *sync.Mutex = &sync.Mutex{}
@@ -44,7 +44,7 @@ func AWSGetImageID(region string) (string, error) {
 	r := regexp.MustCompile(tr)
 
 	s := bufio.NewScanner(strings.NewReader(AWSImageList))
-	s.Buffer(nil, 8 * 1024 * 1024)
+	s.Buffer(nil, 8*1024*1024)
 	var res string
 	for s.Scan() {
 		l := s.Text()
@@ -62,16 +62,16 @@ func AWSGetImageID(region string) (string, error) {
 
 type EC2Region struct {
 	Endpoint string
-	Name string
+	Name     string
 }
 
 func AWSListRegions(sess *session.Session) ([]EC2Region, error) {
 	svc := ec2.New(sess)
 
-	input := &ec2.DescribeRegionsInput {
-		Filters: []*ec2.Filter {
-			&ec2.Filter {
-				Name: aws.String("opt-in-status"),
+	input := &ec2.DescribeRegionsInput{
+		Filters: []*ec2.Filter{
+			&ec2.Filter{
+				Name:   aws.String("opt-in-status"),
 				Values: []*string{aws.String("opt-in-not-required"), aws.String("opted-in")},
 			},
 		},
@@ -95,14 +95,13 @@ func AWSListRegions(sess *session.Session) ([]EC2Region, error) {
 	return output, nil
 }
 
-
 func AWSGetSecurityGroup(sess *session.Session) (string, error) {
 	svc := ec2.New(sess)
 
-	input := &ec2.DescribeSecurityGroupsInput {
-		Filters: []*ec2.Filter {
-			&ec2.Filter {
-				Name: aws.String("tag-key"),
+	input := &ec2.DescribeSecurityGroupsInput{
+		Filters: []*ec2.Filter{
+			&ec2.Filter{
+				Name:   aws.String("tag-key"),
 				Values: []*string{aws.String("pika")},
 			},
 		},
@@ -160,11 +159,11 @@ func AWSCreateSecurityGroup(sess *session.Session) (string, error) {
 		GroupName:   aws.String("pika-allow-all"),
 		VpcId:       aws.String(vpcid),
 		TagSpecifications: []*ec2.TagSpecification{
-			&ec2.TagSpecification {
+			&ec2.TagSpecification{
 				ResourceType: aws.String("security-group"),
 				Tags: []*ec2.Tag{
-					&ec2.Tag {
-						Key: aws.String("pika"),
+					&ec2.Tag{
+						Key:   aws.String("pika"),
 						Value: aws.String("security-group"),
 					},
 				},
@@ -189,12 +188,12 @@ func AWSCreateSecurityGroup(sess *session.Session) (string, error) {
 			// Can use setters to simplify seting multiple values without the
 			// needing to use aws.String or associated helper utilities.
 			(&ec2.IpPermission{}).
-			SetIpProtocol("-1").
-			SetFromPort(-1).
-			SetToPort(-1).
-			SetIpRanges([]*ec2.IpRange{
-				{CidrIp: aws.String("0.0.0.0/0")},
-			}),
+				SetIpProtocol("-1").
+				SetFromPort(-1).
+				SetToPort(-1).
+				SetIpRanges([]*ec2.IpRange{
+					{CidrIp: aws.String("0.0.0.0/0")},
+				}),
 		},
 	})
 	if err != nil {
@@ -205,28 +204,28 @@ func AWSCreateSecurityGroup(sess *session.Session) (string, error) {
 		}
 	}
 	/*
-	// it seems that egress rule is already there
-	_, err = svc.AuthorizeSecurityGroupEgress(&ec2.AuthorizeSecurityGroupEgressInput{
-		GroupId: aws.String(output),
-		IpPermissions: []*ec2.IpPermission{
-			// Can use setters to simplify seting multiple values without the
-			// needing to use aws.String or associated helper utilities.
-			(&ec2.IpPermission{}).
-			SetIpProtocol("-1").
-			SetFromPort(-1).
-			SetToPort(-1).
-			SetIpRanges([]*ec2.IpRange{
-				{CidrIp: aws.String("0.0.0.0/0")},
-			}),
-		},
-	})
-	if err != nil {
-		if aerr, ok := err.(awserr.Error); ok {
-			return "", aerr
-		} else {
-			return "", err
+		// it seems that egress rule is already there
+		_, err = svc.AuthorizeSecurityGroupEgress(&ec2.AuthorizeSecurityGroupEgressInput{
+			GroupId: aws.String(output),
+			IpPermissions: []*ec2.IpPermission{
+				// Can use setters to simplify seting multiple values without the
+				// needing to use aws.String or associated helper utilities.
+				(&ec2.IpPermission{}).
+				SetIpProtocol("-1").
+				SetFromPort(-1).
+				SetToPort(-1).
+				SetIpRanges([]*ec2.IpRange{
+					{CidrIp: aws.String("0.0.0.0/0")},
+				}),
+			},
+		})
+		if err != nil {
+			if aerr, ok := err.(awserr.Error); ok {
+				return "", aerr
+			} else {
+				return "", err
+			}
 		}
-	}
 	*/
 
 	return output, nil
@@ -235,10 +234,10 @@ func AWSCreateSecurityGroup(sess *session.Session) (string, error) {
 func AWSGetSSHKey(sess *session.Session) (string, error) {
 	svc := ec2.New(sess)
 
-	input := &ec2.DescribeKeyPairsInput {
-		Filters: []*ec2.Filter {
-			&ec2.Filter {
-				Name: aws.String("tag-key"),
+	input := &ec2.DescribeKeyPairsInput{
+		Filters: []*ec2.Filter{
+			&ec2.Filter{
+				Name:   aws.String("tag-key"),
 				Values: []*string{aws.String("pika")},
 			},
 		},
@@ -272,11 +271,11 @@ func AWSUploadSSHKey(sess *session.Session, source string) (string, error) {
 	result, err := svc.ImportKeyPair(&ec2.ImportKeyPairInput{
 		KeyName: aws.String("pikabarrow"),
 		TagSpecifications: []*ec2.TagSpecification{
-			&ec2.TagSpecification {
+			&ec2.TagSpecification{
 				ResourceType: aws.String("key-pair"),
 				Tags: []*ec2.Tag{
-					&ec2.Tag {
-						Key: aws.String("pika"),
+					&ec2.Tag{
+						Key:   aws.String("pika"),
 						Value: aws.String("ssh-key"),
 					},
 				},
@@ -318,7 +317,7 @@ func AWSStartInstanceAtRegions(region string, count int, tag string) error {
 
 func AWSStartInstanceAtRegion(region string, count int, tag string) error {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String(region),
+		Region:      aws.String(region),
 		Credentials: credentials.NewSharedCredentials("", "pika"),
 	})
 
@@ -382,30 +381,30 @@ sed -i '1s/^/server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4\n/' /etc/c
 	encodedUserdata := base64.StdEncoding.EncodeToString([]byte(userdata))
 
 	svc := ec2.New(sess)
-	config := &ec2.RunInstancesInput {
+	config := &ec2.RunInstancesInput{
 		BlockDeviceMappings: []*ec2.BlockDeviceMapping{
 			{
 				DeviceName: aws.String("/dev/sda1"),
 				Ebs: &ec2.EbsBlockDevice{
-					VolumeSize: aws.Int64(128),
+					VolumeSize:          aws.Int64(128),
 					DeleteOnTermination: aws.Bool(true),
-					VolumeType: aws.String("gp2"),
+					VolumeType:          aws.String("gp2"),
 				},
 			},
 		},
-		ImageId: aws.String(ami),
-		InstanceType: aws.String("c5d.4xlarge"),
-		KeyName: aws.String(keyid),
-		MinCount: aws.Int64(int64(count)),
-		MaxCount: aws.Int64(int64(count)),
+		ImageId:          aws.String(ami),
+		InstanceType:     aws.String("c5d.4xlarge"),
+		KeyName:          aws.String(keyid),
+		MinCount:         aws.Int64(int64(count)),
+		MaxCount:         aws.Int64(int64(count)),
 		SecurityGroupIds: []*string{aws.String(sgid)},
-		EbsOptimized: aws.Bool(true),
+		EbsOptimized:     aws.Bool(true),
 		TagSpecifications: []*ec2.TagSpecification{
-			&ec2.TagSpecification {
+			&ec2.TagSpecification{
 				ResourceType: aws.String("instance"),
 				Tags: []*ec2.Tag{
-					&ec2.Tag {
-						Key: aws.String("pika"),
+					&ec2.Tag{
+						Key:   aws.String("pika"),
 						Value: aws.String(tag),
 					},
 				},
@@ -427,13 +426,13 @@ sed -i '1s/^/server 169.254.169.123 prefer iburst minpoll 4 maxpoll 4\n/' /etc/c
 }
 
 func AWSStopServersAtRegion(region string, tag string) error {
-	servers, err := AWSListServersAtRegion(region, tag)	// TODO: don't use listservers since it does not show non-running servers
+	servers, err := AWSListServersAtRegion(region, tag) // TODO: don't use listservers since it does not show non-running servers
 	if err != nil {
 		return err
 	}
 
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String(region),
+		Region:      aws.String(region),
 		Credentials: credentials.NewSharedCredentials("", "pika"),
 	})
 
@@ -483,11 +482,11 @@ func AWSStopServersAtAllRegions(tag string) error {
 }
 
 type AWSServer struct {
-	Region string
-	ID string
-	PublicIP string
+	Region    string
+	ID        string
+	PublicIP  string
 	PrivateIP string
-	Tag string
+	Tag       string
 }
 
 func AWSListServersAtAllRegions(tag string) ([]AWSServer, error) {
@@ -519,7 +518,7 @@ func AWSListServersAtAllRegions(tag string) ([]AWSServer, error) {
 
 func AWSListServersAtRegion(region string, tag string) ([]AWSServer, error) {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String(region),
+		Region:      aws.String(region),
 		Credentials: credentials.NewSharedCredentials("", "pika"),
 	})
 
@@ -532,15 +531,15 @@ func AWSListServersAtRegion(region string, tag string) ([]AWSServer, error) {
 		for _, v := range d {
 			for _, instance := range v.Instances {
 				// skip non-running instances
-				if (*instance.State.Code) & 255 != 16 {
+				if (*instance.State.Code)&255 != 16 {
 					continue
 				}
-				out := AWSServer {
-					ID: *instance.InstanceId,
-					Region: region,
-					Tag: tag,
+				out := AWSServer{
+					ID:        *instance.InstanceId,
+					Region:    region,
+					Tag:       tag,
 					PrivateIP: *instance.PrivateIpAddress,
-					PublicIP: *instance.PublicIpAddress,
+					PublicIP:  *instance.PublicIpAddress,
 				}
 				output = append(output, out)
 			}
@@ -595,15 +594,15 @@ func AWSDumpServerInfo(path string, servers []AWSServer) {
 	var dt []Server
 	for _, s := range servers {
 		dt = append(dt, Server{
-			ID:       s.ID,
-			PublicIP:       s.PublicIP,
+			ID:        s.ID,
+			PublicIP:  s.PublicIP,
 			PrivateIP: s.PrivateIP,
-			Location: s.Region,
-			Tag:      s.Tag,
-			Provider: "aws",
-			User: "ubuntu",
-			KeyPath: keypath,
-			Port: 22,
+			Location:  s.Region,
+			Tag:       s.Tag,
+			Provider:  "aws",
+			User:      "ubuntu",
+			KeyPath:   keypath,
+			Port:      22,
 		})
 	}
 	sort.Sort(ServerByLocation(dt))
@@ -621,7 +620,7 @@ func AWSDumpServerInfo(path string, servers []AWSServer) {
 
 func AWSFilterRegionsByName(location string) ([]string, error) {
 	sess, err := session.NewSession(&aws.Config{
-		Region: aws.String("us-east-1"),
+		Region:      aws.String("us-east-1"),
 		Credentials: credentials.NewSharedCredentials("", "pika"),
 	})
 

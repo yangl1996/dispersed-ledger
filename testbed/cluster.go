@@ -9,21 +9,21 @@ import (
 )
 
 type Server struct {
-	ID       string
-	PublicIP string
+	ID        string
+	PublicIP  string
 	PrivateIP string
-	Port int
-	User     string
-	KeyPath string
-	Location string
-	Tag      string
-	Provider string
+	Port      int
+	User      string
+	KeyPath   string
+	Location  string
+	Tag       string
+	Provider  string
 }
 
 type ServerByLocation []Server
 
-func (s ServerByLocation) Len() int { return len(s) }
-func (s ServerByLocation) Swap(i, j int) {s[i], s[j] = s[j], s[i]}
+func (s ServerByLocation) Len() int      { return len(s) }
+func (s ServerByLocation) Swap(i, j int) { s[i], s[j] = s[j], s[i] }
 func (s ServerByLocation) Less(i, j int) bool {
 	byloc := strings.Compare(s[i].Location, s[j].Location)
 	if byloc == 0 {
@@ -32,7 +32,6 @@ func (s ServerByLocation) Less(i, j int) bool {
 		return byloc == -1
 	}
 }
-
 
 func ReadServerInfo(path string) []Server {
 	var dt []Server

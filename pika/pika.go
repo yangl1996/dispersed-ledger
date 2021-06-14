@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strings"
 	"sync"
-	"time"
 	"sync/atomic"
+	"time"
 )
 
 var NagleSize int
@@ -17,7 +17,7 @@ var FirstUnconfirmed int64
 
 // PikaPayload is the interface that the application data in Pika should support.
 type PikaPayload interface {
-	LogPropose() string // returns a string upon proposing the object
+	LogPropose() string    // returns a string upon proposing the object
 	LogConfirm(int) string // returns a string upon confirming the object
 }
 
@@ -71,8 +71,8 @@ type PikaEpoch struct {
 	// node; this field is managed by ConfirmUntil and should not be read or written otherwise
 	termed bool // if we have terminated; termination happens when all BAs are terminated, and we have decoded
 	// all blocks whose BAs output true
-	hptermed bool        // if we have high-priority terminated; HP termination happens when all BAs are terminated
-	codec    ErasureCode // the erasure code to be used by the VIDs
+	hptermed       bool        // if we have high-priority terminated; HP termination happens when all BAs are terminated
+	codec          ErasureCode // the erasure code to be used by the VIDs
 	requestStarted bool
 	ProtocolParams
 }
@@ -606,10 +606,10 @@ func (p *PikaEpoch) Init() ([]Message, Event) {
 
 // PikaMessage is a message handled and sent by Pika.
 type PikaMessage struct {
-	Sent time.Time
-	Epoch int
-	Msg   *PikaEpochMessage
-	Dummy bool
+	Sent   time.Time
+	Epoch  int
+	Msg    *PikaEpochMessage
+	Dummy  bool
 	Finish bool
 	FromID int
 	DestID int
@@ -650,9 +650,9 @@ func (m PikaMessage) Size() int {
 // PikaPayloadQueue is the interface that a queue should implement to supply payload
 // data to Pika.
 type PikaPayloadQueue interface {
-    QueueLength() int
+	QueueLength() int
 	TakeBlock() PikaPayload              // take a new block
-	EmptyBlock() PikaPayload			 // take an empty block
+	EmptyBlock() PikaPayload             // take an empty block
 	FillBlock(b PikaPayload) PikaPayload // fill additional data into the given block
 	LogQueueStatus() string              // return a message of the queue status to be printed to the log
 	Stop()                               // stop accepting or generating new data
@@ -660,17 +660,17 @@ type PikaPayloadQueue interface {
 
 // Pika contains the state of the Pika consensus protocol.
 type Pika struct {
-	coupledValidity bool
-	maxEpoch          int          // the max. epoch index, -1 for unlimited
-	epochs            []*PikaEpoch // epochs of the Pika instance
-	numDispersed      int          // the number of epochs that have finished dispersion (high-priority terminate)
+	coupledValidity        bool
+	maxEpoch               int          // the max. epoch index, -1 for unlimited
+	epochs                 []*PikaEpoch // epochs of the Pika instance
+	numDispersed           int          // the number of epochs that have finished dispersion (high-priority terminate)
 	numContinuousDispersed int
-	firstUnterminated int          // the first epoch that is not terminated
-	firstUninited     int          // the first epoch that we have not initialized (dispersion)
-	firstUnoutput     int          // the first epoch that is not output - we must output in sequence, and can output iff all previous epochs are fully terminated
+	firstUnterminated      int // the first epoch that is not terminated
+	firstUninited          int // the first epoch that we have not initialized (dispersion)
+	firstUnoutput          int // the first epoch that is not output - we must output in sequence, and can output iff all previous epochs are fully terminated
 	firstNotStartedRequest int
-	pipeline          int          // pipeline depth - the max. number of epochs that have been inited but not terminated, 0 means unlimited
-	parallelism       int          // dispersion parallelism - the max. number of epochs that have been inited but not dispersed, 0 means unlimited
+	pipeline               int // pipeline depth - the max. number of epochs that have been inited but not terminated, 0 means unlimited
+	parallelism            int // dispersion parallelism - the max. number of epochs that have been inited but not dispersed, 0 means unlimited
 	ProtocolParams
 	firstUndispersed []int                     // the first epoch of each node that the VID has not finished
 	firstUnretrieved []int                     // the first epoch of each node that we have not decoded the dispersed block
@@ -684,7 +684,7 @@ type Pika struct {
 // NewPika constructs a new instance of Pika.
 func NewPika(chained bool, maxEpoch int, pipelineDepth int, maxParallelism int, txQueue PikaPayloadQueue, codec ErasureCode, progressChan chan struct{ Id, Pg int }, cv bool, pr ProtocolParams) *Pika {
 	p := &Pika{
-		coupledValidity: cv,
+		coupledValidity:  cv,
 		maxEpoch:         maxEpoch,
 		pipeline:         pipelineDepth,
 		parallelism:      maxParallelism,
@@ -744,9 +744,9 @@ func (p *Pika) FirstUnterminated() int {
 func (p *Pika) sendOutFinish(e int) []Message {
 	var msgs []Message
 	for i := 0; i < p.N; i++ {
-		msgs = append(msgs, &PikaMessage {
-			Sent: time.Now(),
-			Epoch: e,
+		msgs = append(msgs, &PikaMessage{
+			Sent:   time.Now(),
+			Epoch:  e,
 			Finish: true,
 			FromID: p.ID,
 			DestID: i,
@@ -952,7 +952,7 @@ func (p *Pika) canInitNext() (bool, bool) {
 
 	PreviousCheck = time.Now()
 	// if we should propose an empty block - do so when the pipeline stages is greater than 1
-	if p.firstUninited - p.firstUnoutput > 2 {
+	if p.firstUninited-p.firstUnoutput > 2 {
 		return true, false
 	} else {
 		return true, true
@@ -1084,7 +1084,7 @@ func (p *Pika) Recv(mg Message) ([]Message, Event) {
 		}
 
 		oldncd := p.numContinuousDispersed
-		for  i := p.numContinuousDispersed; i < len(p.epochs); i++ {
+		for i := p.numContinuousDispersed; i < len(p.epochs); i++ {
 			if p.epochs[i].hptermed {
 				p.numContinuousDispersed = i
 			}
@@ -1096,7 +1096,7 @@ func (p *Pika) Recv(mg Message) ([]Message, Event) {
 	}
 
 	// start requesting at most 30 levels beyond the currently output level
-	for i := p.firstNotStartedRequest; i < p.firstUnoutput + p.pipeline + 10; i++ {
+	for i := p.firstNotStartedRequest; i < p.firstUnoutput+p.pipeline+10; i++ {
 		if len(p.epochs) <= i {
 			break
 		}
@@ -1105,7 +1105,7 @@ func (p *Pika) Recv(mg Message) ([]Message, Event) {
 	}
 
 	// request referenced blocks for the next130 epochs that are terminated
-	for i := p.firstUnoutput; i < p.firstUnoutput + p.pipeline + 10; i++ {
+	for i := p.firstUnoutput; i < p.firstUnoutput+p.pipeline+10; i++ {
 		if len(p.epochs) <= i {
 			break
 		}
@@ -1153,7 +1153,6 @@ func (p *Pika) Recv(mg Message) ([]Message, Event) {
 		atomic.StoreInt64(&FirstUnconfirmed, int64(p.firstUnoutput))
 		msgs = append(msgs, p.sendOutFinish(p.firstUnoutput)...)
 	}
-
 
 	// check if we have initiated all epochs
 	if p.maxEpoch != -1 && len(p.epochs) >= p.maxEpoch+1 {
@@ -1203,4 +1202,3 @@ func BottleneckEpochs(f int) int {
 	sort.Ints(nums)
 	return nums[f]
 }
-

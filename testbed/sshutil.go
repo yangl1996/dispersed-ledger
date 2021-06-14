@@ -35,9 +35,9 @@ func connectSSH(user, addr string, port int, key string) (*ssh.Client, error) {
 		return nil, err
 	}
 
-	config := &ssh.ClientConfig {
+	config := &ssh.ClientConfig{
 		User: user,
-		Auth: []ssh.AuthMethod {
+		Auth: []ssh.AuthMethod{
 			au,
 		},
 		HostKeyCallback: ssh.InsecureIgnoreHostKey(),
@@ -47,4 +47,3 @@ func connectSSH(user, addr string, port int, key string) (*ssh.Client, error) {
 	client, err := ssh.Dial("tcp", fulladdr, config)
 	return client, err
 }
-

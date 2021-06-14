@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/golang/snappy"
-	"encoding/gob"
 	"encoding/csv"
+	"encoding/gob"
 	"flag"
 	"fmt"
+	"github.com/golang/snappy"
 	"io"
 	"os"
 	"path/filepath"
@@ -19,7 +19,7 @@ func dispatchLatency(args []string) {
 	input := cmd.String("i", "", "path of the experiment data directory delimited by commas")
 	output := cmd.String("o", "", "path of the output")
 	crossTransaction := cmd.Bool("x", false, "also count transactions proposed by other nodes")
-	skipStart:= cmd.Int("skip", 0, "skip the first x%")
+	skipStart := cmd.Int("skip", 0, "skip the first x%")
 	cmd.Parse(args)
 	inputs := strings.Split(*input, ",")
 	runLatency(inputs, *output, *crossTransaction, *skipStart)
@@ -51,7 +51,11 @@ func runLatency(paths []string, out string, cross bool, skip int) {
 
 	var results [][]string
 	results = make([][]string, len(servers))
-	resch := make(chan struct{int; d []string; nt int}, 20)
+	resch := make(chan struct {
+		int
+		d  []string
+		nt int
+	}, 20)
 
 	// scan for each server
 	for idx, v := range servers {
@@ -77,7 +81,11 @@ func runLatency(paths []string, out string, cross bool, skip int) {
 			}
 			data, nt := CalcLatencyStats(ifs, skip)
 			od := []string{v.Location, strconv.Itoa(data[5]), strconv.Itoa(data[50]), strconv.Itoa(data[95])}
-			resch <- struct{int; d []string; nt int}{idx, od, nt}
+			resch <- struct {
+				int
+				d  []string
+				nt int
+			}{idx, od, nt}
 		}(idx, v)
 	}
 
@@ -109,7 +117,7 @@ func CalcLatencyStats(inputs []io.Reader, skip int) ([]int, int) {
 				os.Exit(1)
 				break
 			}
-		    localNums = append(localNums, int(n))
+			localNums = append(localNums, int(n))
 			if err == io.EOF {
 				break
 			}
@@ -119,7 +127,7 @@ func CalcLatencyStats(inputs []io.Reader, skip int) ([]int, int) {
 		if skip != 0 {
 			start = int(float64(skip) / 100.0 * float64(nn))
 		}
-		toInsert := localNums[start:nn-1]
+		toInsert := localNums[start : nn-1]
 		nums = append(nums, toInsert...)
 	}
 

@@ -1,14 +1,14 @@
 package main
 
 import (
-	"strings"
-	"strconv"
+	"compress/gzip"
 	"flag"
 	"fmt"
-	"compress/gzip"
-	"os"
-	"math/rand"
 	"math"
+	"math/rand"
+	"os"
+	"strconv"
+	"strings"
 	"time"
 )
 
@@ -29,7 +29,7 @@ func TwoStates(htime, hbw, ltime, lbw int) string {
 		b.WriteString("\n")
 		curtime += hintv
 	}
-	for curtime < float64(htime + ltime) {
+	for curtime < float64(htime+ltime) {
 		b.WriteString(strconv.Itoa(int(curtime)))
 		b.WriteString("\n")
 		curtime += lintv
@@ -45,11 +45,11 @@ func GaussMarkov(duration, sampleIntv int, mean, alpha, stddev float64) string {
 	bw := 0.0
 	currentTime := 0.0
 
-	normFactor := math.Sqrt(1 - alpha * alpha)
+	normFactor := math.Sqrt(1 - alpha*alpha)
 
 	for currentTime < float64(duration) {
 		// sample for this interval
-		currentBw := alpha * bw + rand.NormFloat64() * stddev * normFactor
+		currentBw := alpha*bw + rand.NormFloat64()*stddev*normFactor
 		bw = currentBw
 		realBw := mean + currentBw
 		if Debug {
@@ -87,7 +87,6 @@ func dispatchMahimahi(args []string) {
 	lowbw := command.Int("low", 0, "low bandwidth in binary mode in KB/s")
 	hightime := command.Int("hightime", 10000, "high time in binary mode in ms")
 	lowtime := command.Int("lowtime", 0, "low time in binary mode in ms")
-
 
 	command.Parse(args[0:])
 

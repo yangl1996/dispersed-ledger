@@ -30,9 +30,9 @@ const (
 type Priority int
 
 const (
-	High Priority = iota	// signaling
-	Medium			// dispersal
-	Low			// retrieval
+	High   Priority = iota // signaling
+	Medium                 // dispersal
+	Low                    // retrieval
 )
 
 // Message is the interface that groups the methods that a message should support.

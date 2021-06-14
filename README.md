@@ -19,12 +19,9 @@ Lei Yang, Seo Jin Park, Mohammad Alizadeh, Sreeram Kannan, David Tse
 
 ## Build
 
-Clone my fork of [quic-go](https://github.com/yangl1996/quic-go) somewhere
-on your machine and switch to the `emu-conns` branch.
-Then, modify `go.mod`, line 24,
-to point to the `quic-go` fork you have just cloned.
-
 ```
+git submodule init
+git submodule update  # fetch quic-go with adjustable cubic aggressiveness
 cd pikad
 go build
 ./pikad -h  # show help text

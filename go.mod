@@ -1,6 +1,6 @@
 module github.com/dispersed-ledger/dispersed-ledger
 
-go 1.14
+go 1.15
 
 require (
 	github.com/ahmetalpbalkan/go-cursor v0.0.0-20131010032410-8136607ea412
@@ -21,4 +21,4 @@ require (
 	golang.org/x/sys v0.0.0-20200602225109-6fdc65e7d980
 )
 
-replace github.com/lucas-clemente/quic-go => /Users/leiy/quic-go
+replace github.com/lucas-clemente/quic-go => ./quic-go

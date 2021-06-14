@@ -1,13 +1,13 @@
 package main
 
 import (
-	"path/filepath"
 	"bufio"
 	"flag"
 	"fmt"
 	"log"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"regexp"
 	"strconv"
 	"strings"
@@ -578,7 +578,7 @@ func FilterBandwidth(log string, outpath string, skip int) {
 	// print our stats
 	duration := lastTime.Sub(beginTime).Microseconds()
 	durationForCfm := lastTime.Sub(desiredStartTime).Microseconds()
-	dpLogger.Printf("Duration: %d seconds, High-priority: %.3f MB/s, Low-priority: %.3f MB/s, Total: %.3f MB/s (avg. %.3f MB/s), Confirm: %.3f MB/s (avg. %.3f MB/s)\n", duration/1000000, float64(lastHp)/float64(duration), float64(lastLp)/float64(duration), float64(lastHp+lastLp)/float64(duration), tot/float64(len(pastRes)), float64(lastConfirm - beginConfirm)/float64(durationForCfm), totCfm/float64(len(pastResConfirm)))
+	dpLogger.Printf("Duration: %d seconds, High-priority: %.3f MB/s, Low-priority: %.3f MB/s, Total: %.3f MB/s (avg. %.3f MB/s), Confirm: %.3f MB/s (avg. %.3f MB/s)\n", duration/1000000, float64(lastHp)/float64(duration), float64(lastLp)/float64(duration), float64(lastHp+lastLp)/float64(duration), tot/float64(len(pastRes)), float64(lastConfirm-beginConfirm)/float64(durationForCfm), totCfm/float64(len(pastResConfirm)))
 	return
 }
 
@@ -716,7 +716,7 @@ func FilterBlockSize(log string, outpath string) {
 		}
 	}
 	ScanLogFile(log, proc)
-	dpLogger.Printf("Block Size: %v Bytes\n", totsize / num)
+	dpLogger.Printf("Block Size: %v Bytes\n", totsize/num)
 	return
 }
 

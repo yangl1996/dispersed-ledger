@@ -15,30 +15,30 @@ const (
 
 // BAEpoch is an epoch of BA.
 type BAEpoch struct {
-	rcvdVTrue    []bool // true if the node has sent us Viable(true)
-	nVTrue       int    // number of Viable(true) we have received
-	rcvdVFalse   []bool // true if the node has sent us Viable(false)
-	nVFalse      int    // number of Viable(false) we have received
-	rcvdA        []bool // whether we have received agreement from this node
-	valueA       []bool // the value of agreement that we received from this node
-	sentVTrue    bool   // if we have sent out Viable(true)
-	sentVFalse   bool   // if we have sent out Viable(false)
-	sentA        bool   // if we have sent out Agreement
-	believeTrue  bool   // if we believe in true (we believe in true after receiving 2F+1 Viable(true))
-	believeFalse bool   // if we believe in false
-	e            bool   // our initial estimation at the beginning of this epoch
-	candidateTrue  bool // Whether we think True is a candidate output of the BA.
-	candidateFalse bool // Whether we think False is a candidate output of the BA.
-	termed         bool // If this BAEpoch has terminated.
+	rcvdVTrue      []bool // true if the node has sent us Viable(true)
+	nVTrue         int    // number of Viable(true) we have received
+	rcvdVFalse     []bool // true if the node has sent us Viable(false)
+	nVFalse        int    // number of Viable(false) we have received
+	rcvdA          []bool // whether we have received agreement from this node
+	valueA         []bool // the value of agreement that we received from this node
+	sentVTrue      bool   // if we have sent out Viable(true)
+	sentVFalse     bool   // if we have sent out Viable(false)
+	sentA          bool   // if we have sent out Agreement
+	believeTrue    bool   // if we believe in true (we believe in true after receiving 2F+1 Viable(true))
+	believeFalse   bool   // if we believe in false
+	e              bool   // our initial estimation at the beginning of this epoch
+	candidateTrue  bool   // Whether we think True is a candidate output of the BA.
+	candidateFalse bool   // Whether we think False is a candidate output of the BA.
+	termed         bool   // If this BAEpoch has terminated.
 	ProtocolParams
 }
 
 // BAEpochMessage is a message emitted and handled by a BAEpoch.
 type BAEpochMessage struct {
-	Type   int  // type of the message represented as an integer
-	Value  bool // value of the message
-	DestID int  // the node this message is going to
-	FromID int  // the sending node of the message
+	Type      int  // type of the message represented as an integer
+	Value     bool // value of the message
+	DestID    int  // the node this message is going to
+	FromID    int  // the sending node of the message
 	Signature []byte
 }
 

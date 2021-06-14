@@ -9,8 +9,8 @@ import (
 	"sync/atomic"
 	"time"
 
+	"github.com/dispersed-ledger/dispersed-ledger/pika"
 	quic "github.com/lucas-clemente/quic-go"
-	"github.com/yangl1996/gopika/pika"
 )
 
 var termReported int64 = 0

@@ -6,9 +6,9 @@ import (
 	"encoding/gob"
 
 	//"io"
+	"github.com/dispersed-ledger/dispersed-ledger/pika"
 	"github.com/eapache/channels"
 	quic "github.com/lucas-clemente/quic-go"
-	"github.com/yangl1996/gopika/pika"
 	"log"
 	"sync/atomic"
 )
