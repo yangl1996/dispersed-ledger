@@ -4,7 +4,7 @@ set term pdf size 3.2,2.0
 set output "fig.pdf"
 
 set yrange [0:5]
-set xrange [0:55]
+set xrange [15:55]
 set notitle
 set xlabel "Time"
 set ylabel "Bandwidth"
