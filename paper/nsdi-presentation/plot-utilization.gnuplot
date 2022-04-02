@@ -16,4 +16,5 @@ unset ytics
 plot "concurrent-uk.trace" using 0:1 notitle with lines, \
      "concurrent-indonesia.trace" using 0:1 notitle with lines, \
      "concurrent-brazil.trace" using 0:1 notitle with lines, \
-     "concurrent-singapore.trace" using 0:1 notitle with lines
+     "concurrent-singapore.trace" using 0:1 notitle with lines, \
+     "concurrent-dutch.trace" using 0:1 notitle with lines
