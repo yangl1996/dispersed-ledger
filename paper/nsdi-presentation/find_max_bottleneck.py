@@ -8,7 +8,7 @@ ds = [[], [], [], [], []]
 
 idx = 0
 mlen = 100000
-for file in [uk, dutch, singapore, brazil, indonesia]:
+for file in [uk, singapore, brazil, indonesia, dutch]:
     for line in file:
         l = line.strip()
         if "sender" in l:
@@ -26,11 +26,11 @@ max_tot = 0.0
 min_tot = 0.0
 for t in range(mlen):
     bw = []
-    for i in range(5):
+    for i in range(4):
         bw.append(ds[i][t])
     bw.sort()
-    print(bw[1], "  ", bw[4])
-    max_tot += bw[4]
+    print(bw[1], "  ", bw[3])
+    max_tot += bw[3]
     min_tot += bw[1]
 
 print("# ", max_tot/min_tot)

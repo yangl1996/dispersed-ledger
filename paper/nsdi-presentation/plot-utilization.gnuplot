@@ -9,12 +9,14 @@ set notitle
 set xlabel "Time"
 set ylabel "Bandwidth"
 
-set style fill solid 0.7 noborder
+set style fill pattern 10 noborder
 unset xtics
 unset ytics
 
-plot "concurrent-uk.trace" using 0:1 notitle with lines, \
-     "concurrent-indonesia.trace" using 0:1 notitle with lines, \
-     "concurrent-brazil.trace" using 0:1 notitle with lines, \
-     "concurrent-singapore.trace" using 0:1 notitle with lines, \
-     "concurrent-dutch.trace" using 0:1 notitle with lines
+plot "threshold.trace" using 0:1 notitle with filledcurves x1 lc 0, \
+     "concurrent-uk.trace" using 0:1 notitle with lines lc 1 lw 2, \
+     "concurrent-indonesia.trace" using 0:1 notitle with lines lc 2 lw 2, \
+     "concurrent-brazil.trace" using 0:1 notitle with lines lc 3 lw 2, \
+     "concurrent-singapore.trace" using 0:1 notitle with lines lc 4 lw 2, \
+     "threshold.trace" using 0:2 notitle with lines lc 0 lw 2.5
+#     "concurrent-dutch.trace" using 0:1 notitle with lines lc 6 lw 2, \
