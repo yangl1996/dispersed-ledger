@@ -11,6 +11,7 @@ set xtics rotate by -45
 set notitle
 #set title "Confirmation Latency"
 set yrange [0:10]
+set ytics ("0" 0, "2" 2, "4" 4, "6" 6, "8" 8, "∞" 10)
 
 set rmargin 5
 #column 0 is the row number
