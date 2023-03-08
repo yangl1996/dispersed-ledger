@@ -12,7 +12,8 @@ set notitle
 #set title "Confirmation Latency"
 set yrange [0:10]
 set ytics ("0" 0, "2" 2, "4" 4, "6" 6, "8" 8, "∞" 10)
+set xrange [-0.5:16.05]
 
 set rmargin 5
 #column 0 is the row number
-plot "hb-nocross.dat" using ($0+0.125):($3/1000):(0.25):xtic(1) title "HB" with boxes fill solid
+plot "hb-nocross.dat" using ($0):($3/1000):(0.25):xtic(1) title "HB" with boxes fill solid

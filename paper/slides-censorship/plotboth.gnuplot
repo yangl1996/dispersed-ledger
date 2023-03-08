@@ -12,6 +12,7 @@ set notitle
 #set title "Confirmation Latency"
 set yrange [0:10]
 set ytics ("0" 0, "2" 2, "4" 4, "6" 6, "8" 8, "∞" 10)
+set xrange [-0.5:16.05]
 
 set rmargin 5
 #column 0 is the row number
