@@ -1,6 +1,6 @@
 #!/usr/local/bin/gnuplot
 
-set term pdf size 5.3,2.0 font ",16"
+set term pdf size 5.3,2.1 font ",15"
 #set size ratio 0.618
 set output "geo-thruput.pdf"
 set datafile separator ","
